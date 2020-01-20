@@ -1,0 +1,69 @@
+﻿@using Umbraco.Web.Models
+@inherits UmbracoViewPage
+
+@{
+    var homePage = Model.AncestorOrSelf<Home>();
+
+    var socialLinks = homePage.Value<IEnumerable<IPublishedElement>>("socialLinks");
+}
+
+<!-- Footer -->
+<footer id="footer">
+    <section>
+        <form method="post" action="#">
+            <div class="fields">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" />
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" />
+                </div>
+                <div class="field">
+                    <label for="message">Message</label>
+                    <textarea name="message" id="message" rows="3"></textarea>
+                </div>
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value="Send Message" /></li>
+            </ul>
+        </form>
+    </section>
+    <section class="split contact">
+        <section class="alt">
+            <h3>Address</h3>
+            <p>
+                @Umbraco.GetDictionaryValue("Footer.Address")
+            </p>
+        </section>
+        <section>
+            <h3>Phone</h3>
+            <p><a href="#">@Umbraco.GetDictionaryValue("Footer.PhoneNumber")</a></p>
+        </section>
+        <section>
+            <h3>Email</h3>
+            <p><a href="#">@Umbraco.GetDictionaryValue("Footer.Email")</a></p>
+        </section>
+        <section>
+            <h3>Social</h3>
+            @if (socialLinks != null && socialLinks.Any())
+            {
+                <ul class="icons alt">
+                    @foreach (var item in socialLinks)
+                    {
+                        var link = item.Value<Link>("link");
+                        var iconClass = item.Value<string>("iconClass");
+
+                        <li><a href="@link.Url" target="@link.Target" class="icon brands alt @iconClass"><span class="label">Twitter</span></a></li>
+                    }
+                </ul>
+            }
+        </section>
+    </section>
+</footer>
+
+<!-- Copyright -->
+<div id="copyright">
+    <ul><li>&copy; @Umbraco.GetDictionaryValue("Footer.Copyright")</li></ul>
+</div>

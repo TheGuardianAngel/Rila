@@ -1,0 +1,67 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.PublishedModels.Search>
+
+@{
+    Layout = "master.cshtml";
+    var searchQuery = Request.QueryString["q"];
+}
+
+@* the fun starts here *@
+<div id="main">
+    <header class="major">
+        <h1>
+            @Model.Name
+        </h1>
+        <p>
+            Aenean ornare velit lacus varius enim ullamcorper proin aliquam<br />
+            facilisis ante sed etiam magna interdum congue. Lorem ipsum dolor<br />
+            amet nullam sed etiam veroeros.
+        </p>
+    </header>
+    <div class="container">
+        <form action="@Model.Url" method="GET" id="search">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group controls">
+                        <input type="text" class="form-control col-xs-6" placeholder="Search for something..." name="q" value="" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <button class="btn btn-primary search-button">Search <i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="col-6">
+                    @if (!string.IsNullOrWhiteSpace(searchQuery))
+                    {
+                        var results = Umbraco.ContentQuery.Search(searchQuery, string.Empty);
+                        long resultCount = results != null && results.Any() ? results.Count() : 0;
+
+                        <p>Your search for <strong>@searchQuery</strong> found <strong>@resultCount</strong> result@(resultCount == 1 ? null : "s")!</p>
+
+                        if (resultCount > 0)
+                        {
+                            foreach (var result in results)
+                            {
+                                var title = result.Content.Value<string>("title");
+                                var subtitle = result.Content.Value<string>("subtitle");
+                                <article>
+                                    <header>
+                                        <h2>
+                                            <a href="@result.Content.Url">
+                                                @(!string.IsNullOrWhiteSpace(title) ? title : result.Content.Name)
+                                            </a>
+                                        </h2>
+                                    </header>
+                                    @if (!string.IsNullOrWhiteSpace(subtitle))
+                                    {
+                                        <p>@subtitle</p>
+                                    }
+                                </article>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

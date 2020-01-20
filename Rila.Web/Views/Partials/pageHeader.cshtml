@@ -1,0 +1,63 @@
+﻿@inherits UmbracoViewPage
+
+@{
+    var title = Model.HasValue("title") ? Model.Value("title") : Model.Name;
+    var subtitle = Model.HasValue("subtitle") ? Model.Value<string>("subtitle") : "";
+    DateTime articleDate = Model.HasValue("articleDate") && Model.HasProperty("articleDate") ? Model.Value<DateTime>("articleDate") : DateTime.MinValue;
+    var mainImage = Model.HasValue("mainImage") ? Model.Value<IPublishedContent>("mainImage") : null;
+
+    var latestArticle = Model.Root().Descendants<Article>().Where(x => x.IsVisible()).OrderByDescending(y => y.ArticleDate).FirstOrDefault();
+}
+@if (Model.Name == "Home")
+{
+    <header class="major">
+        @if (latestArticle.ArticleDate != null)
+        {
+            <span class="date">@latestArticle.ArticleDate.ToString("MMM dd, yyyy")</span>
+        }
+
+        <h2>
+            <a href="@latestArticle.Url">
+                @latestArticle.Title
+            </a>
+        </h2>
+        @if (!string.IsNullOrWhiteSpace(latestArticle.Subtitle))
+        {
+            <p>
+                @latestArticle.Subtitle
+            </p>
+        }
+
+        @if (latestArticle.MainImage != null)
+        {
+            <a href="@latestArticle.Url" class="image main"><img src="@latestArticle.MainImage.Url" alt="" /></a>
+        }
+    </header>
+    <ul class="actions special">
+        <li><a href="@latestArticle.Url" class="button large">Full Story</a></li>
+    </ul>
+}
+else
+{
+    <header class="major">
+        @if (articleDate != DateTime.MinValue)
+        {
+            <span class="date">@articleDate.ToString("MMM dd, yyyy")</span>
+        }
+
+        <h2>
+            @title
+        </h2>
+        @if (!string.IsNullOrWhiteSpace(subtitle))
+        {
+            <p>
+                @subtitle
+            </p>
+        }
+
+        @if (mainImage != null)
+        {
+            <a class="image main"><img src="@mainImage.Url" alt="" /></a>
+        }
+    </header>
+}

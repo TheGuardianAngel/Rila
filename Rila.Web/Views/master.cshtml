@@ -1,8 +1,54 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@using ClientDependency.Core.Mvc
+
 @{
-	Layout = null;
+    Layout = null;
+
+    Html.RequiresCss("/assets/css/main.css");
+
+    Html.RequiresJs("/assets/js/jquery.min.js");
+    Html.RequiresJs("/assets/js/jquery.scrollex.min.js");
+    Html.RequiresJs("/assets/js/jquery.scrolly.min.js");
+    Html.RequiresJs("/assets/js/browser.min.js");
+    Html.RequiresJs("/assets/js/breakpoints.min.js");
+    Html.RequiresJs("/assets/js/util.js");
+    Html.RequiresJs("/assets/js/main.js");
+    Html.RequiresJs("/scripts/pleasedontgo.js");
 }
 
-@* the fun starts here *@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Rila | @Model.Name</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/mountain.ico" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-@RenderBody()
+    @Html.RenderCssHere()
+
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+        @if (Model.Name=="Home")
+        {
+            @Html.Partial("~/Views/Partials/homepage-intro.cshtml")
+        }
+
+        @Html.Partial("~/Views/Partials/header.cshtml")
+
+        @Html.Partial("~/Views/Partials/navigation.cshtml")
+
+        @RenderBody()
+
+        @Html.Partial("~/Views/Partials/footer.cshtml")
+
+    </div>
+
+    @Html.RenderJsHere()
+
+</body>
+</html>

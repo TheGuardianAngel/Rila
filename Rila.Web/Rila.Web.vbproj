@@ -446,6 +446,7 @@
     <Content Include="config\Lang\zh-CN.user.xml" />
     <Content Include="config\logviewer.searches.config.js" />
     <Content Include="Global.asax" />
+    <Content Include="scripts\pleasedontgo.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +512,19 @@
     <Content Include="Views\Partials\Grid\Bootstrap3-Fluid.cshtml" />
     <Content Include="Views\home.cshtml" />
     <Content Include="Views\master.cshtml" />
+    <Content Include="Views\Partials\navigation.cshtml" />
+    <Content Include="Views\Partials\homepage-intro.cshtml" />
+    <Content Include="Views\Partials\footer.cshtml" />
+    <Content Include="Views\Partials\header.cshtml" />
+    <Content Include="Views\Partials\latestArticles.cshtml" />
+    <Content Include="Views\article.cshtml" />
+    <Content Include="Views\content.cshtml" />
+    <Content Include="Views\search.cshtml" />
+    <Content Include="Views\Partials\pageHeader.cshtml" />
+    <Content Include="Views\error.cshtml" />
+    <Content Include="Views\lakeList.cshtml" />
+    <Content Include="Views\riverList.cshtml" />
+    <Content Include="Views\xMLSitemap.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -522,12 +536,19 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\vb\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\vb\Microsoft.CodeAnalysis.VisualBasic.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rila.Core\Rila.Core.csproj">
+      <Project>{492dd46c-c818-47e0-9aec-88b99cd07255}</Project>
+      <Name>Rila.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <OptionExplicit>On</OptionExplicit>
+    <OptionExplicit>Off</OptionExplicit>
   </PropertyGroup>
   <PropertyGroup>
     <OptionCompare>Binary</OptionCompare>

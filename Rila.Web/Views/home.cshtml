@@ -1,11 +1,19 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Home>
-
-@using Umbraco.Web.PublishedModels    
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.PublishedModels.Home>
 
 @{
-	Layout = "master.cshtml";
+    Layout = "master.cshtml";
 }
 
 @* the fun starts here *@
 
-@Model.Title
+<!-- Main -->
+<div id="main">
+
+    <!-- Featured Post -->
+    <article class="post featured">
+        @Html.Partial("~/Views/Partials/pageHeader.cshtml")        
+    </article>
+
+    @Html.Partial("~/Views/Partials/latestArticles.cshtml")
+
+</div>

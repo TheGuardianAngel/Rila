@@ -1,0 +1,254 @@
+﻿@using Rila.Core.Helpers
+@inherits UmbracoViewPage
+
+@{
+    var isHomePage = Model.Name == "Home" ? true : false;
+
+    var articlesAll = Model.Root().Descendants<Article>().Where(x => x.IsVisible()).OrderByDescending(y => y.ArticleDate);
+
+    var riversList = Model.Root().Descendants<RiverList>().FirstOrDefault();
+    var rivers = riversList.Descendants<Article>().Where(x => x.IsVisible()).OrderByDescending(y => y.ArticleDate);
+
+    var lakeList = Model.Root().Descendants<LakeList>().FirstOrDefault();
+    var lakes = lakeList.Descendants<Article>().Where(x => x.IsVisible()).OrderByDescending(y => y.ArticleDate);
+
+    var pageNumber = QueryStringHelper.GetIntFromQueryString(Request, "page", 1);
+    var pageSize = QueryStringHelper.GetIntFromQueryString(Request, "size", 6);
+
+    var pageOfArticles = articlesAll.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+    var pageOfArticlesRivers = rivers.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+    var pageOfArticlesLakes = lakes.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+    var totalArticlesCount = articlesAll.Count();
+    var totalRiversCount = rivers.Count();
+    var totalLakesCount = lakes.Count();
+
+    var articlePageCount = totalArticlesCount > 0 ? Math.Ceiling((double)totalArticlesCount / pageSize) : 1;
+    var riversPageCount = totalRiversCount > 0 ? Math.Ceiling((double)totalRiversCount / pageSize) : 1;
+    var lakesPageCount = totalLakesCount > 0 ? Math.Ceiling((double)totalLakesCount / pageSize) : 1;
+}
+
+<!-- Posts -->
+@if (articlesAll != null && articlesAll.Any() && isHomePage)
+{
+    <section class="posts">
+        @foreach (var article in pageOfArticles)
+        {
+            var articleImage = article.HasValue("mainImage") ? article.Value<IPublishedContent>("mainImage") : null;
+            var imageUrl = "";
+            if (imageUrl != null)
+            {
+                imageUrl = articleImage.GetCropUrl(366, 183);
+            }
+
+            <article>
+                <header>
+                    @if (article.ArticleDate != DateTime.MinValue)
+                    {
+                        <span class="date">@article.ArticleDate.ToString("MMM dd, yyyy")</span>
+                    }
+                    <h2>
+                        <a href="@article.Url">
+                            @(!string.IsNullOrWhiteSpace(article.Title) ? article.Title : article.Name)
+                        </a>
+                    </h2>
+                </header>
+
+                <a href="@article.Url" class="image fit"><img src="@imageUrl" alt="" /></a>
+
+                @if (!string.IsNullOrWhiteSpace(article.Subtitle))
+                {
+                    <p>@article.Subtitle</p>
+                }
+                <ul class="actions special">
+                    <li><a href="@article.Url" class="button">Read More</a></li>
+                </ul>
+            </article>
+        }
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="pagination">
+            @if (articlePageCount > 1)
+            {
+                <div class="paging-block">
+                    @if (pageNumber > 1)
+                    {
+                        <a class="previous" href="@($"?page={pageNumber - 1}&size={pageSize}")">Prev</a>
+                    }
+                    else
+                    {
+                        @Html.Raw("&nbsp;")
+                    }
+                </div>
+                <div class="paging-block text-center">
+                    <span>Page @pageNumber of @articlePageCount</span>
+                </div>
+                <div class="paging-block">
+                    @if (pageNumber < articlePageCount)
+                    {
+                        <a class="next" href="@($"?page={pageNumber + 1}&size={pageSize}")">Next</a>
+                    }
+                    else
+                    {
+                        @Html.Raw("&nbsp;")
+                    }
+                </div>
+
+            }
+            <!--<a href="#" class="previous">Prev</a>-->
+            @*<a href="#" class="page active">1</a>
+                <a href="#" class="page">2</a>
+                <a href="#" class="page">3</a>
+                <span class="extra">&hellip;</span>
+                <a href="#" class="page">8</a>
+                <a href="#" class="page">9</a>
+                <a href="#" class="page">10</a>
+                <a href="#" class="next">Next</a>*@
+        </div>
+    </footer>
+}
+else
+{
+    if (Model.Name == "Rivers")
+    {
+        <section class="posts">
+            @foreach (var river in pageOfArticlesRivers)
+            {
+                var articleImage = river.HasValue("mainImage") ? river.Value<IPublishedContent>("mainImage") : null;
+                var imageUrl = "";
+                if (imageUrl != null)
+                {
+                    imageUrl = articleImage.GetCropUrl(366, 183);
+                }
+
+                <article>
+                    <header>
+                        @if (river.ArticleDate != DateTime.MinValue)
+                        {
+                            <span class="date">@river.ArticleDate.ToString("MMM dd, yyyy")</span>
+                        }
+                        <h2>
+                            <a href="@river.Url">
+                                @(!string.IsNullOrWhiteSpace(river.Title) ? river.Title : river.Name)
+                            </a>
+                        </h2>
+                    </header>
+
+                    <a href="@river.Url" class="image fit"><img src="@imageUrl" alt="" /></a>
+
+                    @if (!string.IsNullOrWhiteSpace(river.Subtitle))
+                    {
+                        <p>@river.Subtitle</p>
+                    }
+                    <ul class="actions special">
+                        <li><a href="@river.Url" class="button">Read More</a></li>
+                    </ul>
+                </article>
+            }
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="pagination">
+                @if (riversPageCount > 1)
+                {
+                    <div class="paging-block">
+                        @if (pageNumber > 1)
+                        {
+                            <a class="previous" href="@($"{riversList.Url}?page={pageNumber - 1}&size={pageSize}")">Prev</a>
+                        }
+                        else
+                        {
+                            @Html.Raw("&nbsp;")
+                        }
+                    </div>
+                    <div class="paging-block text-center">
+                        <span>Page @pageNumber of @riversPageCount</span>
+                    </div>
+                    <div class="paging-block">
+                        @if (pageNumber < riversPageCount)
+                        {
+                            <a class="next" href="@($"{riversList.Url}?page={pageNumber + 1}&size={pageSize}")">Next</a>
+                        }
+                        else
+                        {
+                            @Html.Raw("&nbsp;")
+                        }
+                    </div>
+                }
+            </div>
+        </footer>
+    }
+    else
+    {
+        <section class="posts">
+            @foreach (var lake in pageOfArticlesLakes)
+            {
+                var articleImage = lake.HasValue("mainImage") ? lake.Value<IPublishedContent>("mainImage") : null;
+                var imageUrl = "";
+                if (imageUrl != null)
+                {
+                    imageUrl = articleImage.GetCropUrl(366, 183);
+                }
+
+                <article>
+                    <header>
+                        @if (lake.ArticleDate != DateTime.MinValue)
+                        {
+                            <span class="date">@lake.ArticleDate.ToString("MMM dd, yyyy")</span>
+                        }
+                        <h2>
+                            <a href="@lake.Url">
+                                @(!string.IsNullOrWhiteSpace(lake.Title) ? lake.Title : lake.Name)
+                            </a>
+                        </h2>
+                    </header>
+
+                    <a href="@lake.Url" class="image fit"><img src="@imageUrl" alt="" /></a>
+
+                    @if (!string.IsNullOrWhiteSpace(lake.Subtitle))
+                    {
+                        <p>@lake.Subtitle</p>
+                    }
+                    <ul class="actions special">
+                        <li><a href="@lake.Url" class="button">Read More</a></li>
+                    </ul>
+                </article>
+            }
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="pagination">
+                @if (lakesPageCount > 1)
+                {
+                    <div class="paging-block">
+                        @if (pageNumber > 1)
+                        {
+                            <a class="previous" href="@($"{lakeList.Url}?page={pageNumber - 1}&size={pageSize}")">Prev</a>
+                        }
+                        else
+                        {
+                            @Html.Raw("&nbsp;")
+                        }
+                    </div>
+                    <div class="paging-block text-center">
+                        <span>Page @pageNumber of @lakesPageCount</span>
+                    </div>
+                    <div class="paging-block">
+                        @if (pageNumber < lakesPageCount)
+                        {
+                            <a class="next" href="@($"{lakeList.Url}?page={pageNumber + 1}&size={pageSize}")">Next</a>
+                        }
+                        else
+                        {
+                            @Html.Raw("&nbsp;")
+                        }
+                    </div>
+                }
+            </div>
+        </footer>
+    }
+}

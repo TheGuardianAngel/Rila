@@ -1,0 +1,35 @@
+﻿@using Umbraco.Web.Models
+@inherits UmbracoViewPage
+
+@{
+    var homePage = Model.AncestorOrSelf<Home>();
+    var pages = Umbraco.Content(Guid.Parse("3b397451-88e2-43b2-a845-f5868746589c"))
+        .Children()
+        .Where(x => x.IsVisible());
+    var socialLinks = homePage.Value<IEnumerable<IPublishedElement>>("socialLinks");
+}
+
+<!-- Nav -->
+<nav id="nav">
+    <ul class="links">
+
+        <li class="@(Model.Name == "Home" ? "active" : null)"><a href="@homePage.Url">@homePage.Name</a></li>
+
+        @foreach (var page in pages)
+        {
+            <li class="@(Model.Name == page.Name ? "active" : null)"><a href="@page.Url">@page.Name</a></li>
+        }
+    </ul>
+    @if (socialLinks != null && socialLinks.Any())
+    {
+        <ul class="icons">
+            @foreach (var item in socialLinks)
+            {
+                var link = item.Value<Link>("link");
+                var iconClass = item.Value<string>("iconClass");
+
+                <li><a href="@link.Url" target="@link.Target" class="icon brands @iconClass"><span class="label">Twitter</span></a></li>
+            }
+        </ul>
+    }
+</nav>
